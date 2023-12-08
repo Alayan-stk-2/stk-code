@@ -86,6 +86,9 @@ void MainMenuScreen::loadedFromFile()
 {
     LabelWidget* w = getWidget<LabelWidget>("info_addons");
     w->setScrollSpeed(GUIEngine::getFontHeight() / 2);
+
+    printf("If the game crashes, this is debug mode. If not, it's STKRelease mode.\n");
+    assert(false);
     
     RibbonWidget* rw_top = getWidget<RibbonWidget>("menu_toprow");
     assert(rw_top != NULL);
