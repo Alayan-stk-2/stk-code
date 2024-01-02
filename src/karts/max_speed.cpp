@@ -448,7 +448,9 @@ void MaxSpeed::update(int ticks)
         m_add_engine_force  += speedup.getEngineForce();
     }
 
-	/*Only apply the engine force and speed from the zipper/ground zipper boost with the higher amount of both*/
+    // Pick the highest applicable speed boost and the highest applicable engine boost, 
+    // which may come from different effects. This approach fixes all possible "fade-out"
+    // issues.
     for(unsigned int i=MS_INCREASE_ZIPPER; i<=MS_INCREASE_GROUND_ZIPPER; i++)
     {
         SpeedIncrease &speedup = m_speed_increase[i];
