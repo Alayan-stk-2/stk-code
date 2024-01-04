@@ -103,7 +103,7 @@
         max-targets        : The maximum number of karts in front nitro can be stolen from.
         negative-multiply  : If the current nitro level is negative, multiply it by this number upon
                              activation, and then apply all other effects. If set to default (1.0),
-        it has no effect.
+                             it has no effect.
         bonus-no-kart      : If there is not enough karts in front to steal from, gift this
                              amount per missing kart.
         stolen-max         : The amount of nitro taken from the kart immediately in front.
