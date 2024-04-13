@@ -78,9 +78,15 @@ void CustomVideoSettingsDialog::beforeAddingWidgets()
     geometry_level->addLabel(_("Low"));
     //I18N: Geometry level high : everything is displayed
     geometry_level->addLabel(_("High"));
+        //I18N: Geometry level high : everything is displayed
+    geometry_level->addLabel(_("Extra1"));
+        //I18N: Geometry level high : everything is displayed
+    geometry_level->addLabel(_("Extra2"));
     geometry_level->setValue(
-        UserConfigParams::m_geometry_level == 2 ? 0 :
-        UserConfigParams::m_geometry_level == 0 ? 2 : 1);
+        UserConfigParams::m_geometry_level == 4 ? 0 :
+        UserConfigParams::m_geometry_level == 3 ? 1 :
+        UserConfigParams::m_geometry_level == 1 ? 3 :
+        UserConfigParams::m_geometry_level == 0 ? 4 : 2);
 
     SpinnerWidget* filtering = getWidget<SpinnerWidget>("image_quality");
     filtering->addLabel(_("Very Low"));
@@ -188,7 +194,10 @@ GUIEngine::EventPropagation CustomVideoSettingsDialog::processEvent(const std::s
 
             const int val =
                 getWidget<SpinnerWidget>("geometry_detail")->getValue();
-            UserConfigParams::m_geometry_level = val == 2 ? 0 : val == 0 ? 2 : 1;
+            UserConfigParams::m_geometry_level = val == 4 ? 0 : 
+                                                 val == 3 ? 1 :
+                                                 val == 1 ? 3 : 
+                                                 val == 0 ? 4 :  2;
             int quality = getWidget<SpinnerWidget>("image_quality")->getValue();
 
             user_config->saveConfig();

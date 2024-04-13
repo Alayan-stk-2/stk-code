@@ -282,6 +282,7 @@ public:
     void     pushCPUMarker(const char* name="N/A",
                            const video::SColor& color=video::SColor());
     void     popCPUMarker();
+    void     activate(); 
     void     toggleStatus(); 
     void     synchronizeFrame();
     void     draw();

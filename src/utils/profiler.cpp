@@ -89,7 +89,7 @@ Profiler::Profiler()
     // When initializing profile class during static initialization
     // UserConfigParams::m_max_fps may not be properly initialized with default
     // value, so we use hard-coded default value
-    m_max_frames          = 20 * 120;
+    m_max_frames          = 1000 * 120;
     m_current_frame       = 0;
     m_has_wrapped_around  = false;
     m_threads_used = 1;
@@ -199,6 +199,21 @@ void Profiler::popCPUMarker()
     td.m_event_stack.pop_back();
     m_lock.unlock();
 }   // popCPUMarker
+
+//-----------------------------------------------------------------------------
+/** Switches the profiler either on or off.
+ */
+void Profiler::activate()
+{
+    UserConfigParams::m_profiler_enabled = true;
+    // If the profiler would immediately enabled, calls that have started but
+    // not finished would not be registered correctly. So set the state to 
+    // waiting, so the unfreeze started at the next sync frame (which is
+    // outside of the main loop, i.e. all profiling events inside of the main
+    // loop will work as expected.
+    if (m_freeze_state == UNFROZEN)
+        m_freeze_state = WAITING_FOR_UNFREEZE;
+}   // toggleStatus
 
 //-----------------------------------------------------------------------------
 /** Switches the profiler either on or off.
@@ -540,11 +555,13 @@ void Profiler::writeToFile()
     for (int thread_id = 0; thread_id < m_threads_used; thread_id++)
     {
         std::ofstream f(FileUtils::getPortableWritingPath(
-            base_name + ".profile-cpu-" + StringUtils::toString(thread_id)));
+            base_name + ".profile-cpu-" + StringUtils::toString(thread_id) + ".csv"));
+        printf("%s\n", FileUtils::getPortableWritingPath(
+            base_name + ".profile-cpu-" + StringUtils::toString(thread_id)).c_str());
         ThreadData &td = m_all_threads_data[thread_id];
         f << "#  ";
         for (unsigned int i = 0; i < td.m_ordered_headings.size(); i++)
-            f << "\"" << td.m_ordered_headings[i] << "(" << i+1 <<")\"   ";
+            f << "\"" << td.m_ordered_headings[i] << "(" << i+1 <<")\",   ";
         f << std::endl;
         int start = m_has_wrapped_around ? m_current_frame + 1 : 0;
         if (start > m_max_frames) start -= m_max_frames;
@@ -553,7 +570,7 @@ void Profiler::writeToFile()
             for (unsigned int i = 0; i < td.m_ordered_headings.size(); i++)
             {
                 const EventData &ed = td.m_all_event_data[td.m_ordered_headings[i]];
-                f << int(ed.getMarker(start).getDuration()*1000) << " ";
+                f << int(ed.getMarker(start).getDuration()*1000) << ", ";
             }   // for i i new_headings
             f << std::endl;
             start = (start + 1) % m_max_frames;
@@ -561,7 +578,7 @@ void Profiler::writeToFile()
         f.close();
     }   // for all thread_ids
 
-    std::ofstream f_gpu(FileUtils::getPortableWritingPath(base_name + ".profile-gpu"));
+    std::ofstream f_gpu(FileUtils::getPortableWritingPath(base_name + ".profile-gpu.csv"));
     f_gpu << "# ";
 
     for (unsigned i = 0; i < Q_LAST; i++)

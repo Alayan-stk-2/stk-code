@@ -732,6 +732,9 @@ void World::onGo()
  */
 void World::terminateRace()
 {
+    profiler.writeToFile();
+    printf("Profiling report saved !\n");
+    
     // In case the user opened paused dialog in network
     if (!GUIEngine::isNoGraphics())
     {

@@ -204,6 +204,8 @@ void LODNode::autoComputeLevel(float scale)
     if(UserConfigParams::m_geometry_level == 0) agressivity = 1.25;
     if(UserConfigParams::m_geometry_level == 1) agressivity = 1.0;
     if(UserConfigParams::m_geometry_level == 2) agressivity = 0.75;
+    if(UserConfigParams::m_geometry_level == 3) agressivity = 0.5;
+    if(UserConfigParams::m_geometry_level == 4) agressivity = 0.25;
 
     // First we try to estimate how far away we need to draw
     float max_draw = 0.0;

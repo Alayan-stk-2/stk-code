@@ -66,6 +66,8 @@
 #include "utils/translation.hpp"
 #include "io/rich_presence.hpp"
 
+#include "utils/profiler.hpp"
+
 #include <IrrlichtDevice.h>
 
 #ifdef __SWITCH__
@@ -547,6 +549,9 @@ void RaceManager::startNew(bool from_overworld)
  */
 void RaceManager::startNextRace()
 {
+    profiler.activate();
+    printf("Profiling started\n");
+
 #ifdef __SWITCH__
     // Throttles GPU while boosting CPU
     appletSetCpuBoostMode(ApmCpuBoostMode_FastLoad);
