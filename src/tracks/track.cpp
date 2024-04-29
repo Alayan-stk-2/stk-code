@@ -1394,8 +1394,10 @@ bool Track::loadMainTrack(const XMLNode &root)
         if (lod_instance)
         {
             LODNode* node = lodLoader.instanciateAsLOD(n, NULL, NULL);
+            printf("Can this...\n");
             if (node != NULL)
             {
+                printf("Fail ??\n");
                 node->setPosition(xyz);
                 node->setRotation(hpr);
                 node->setScale(scale);
@@ -1832,7 +1834,7 @@ static void recursiveUpdatePhysics(std::vector<TrackObject*>& tos)
  *  \param mode_id Which of the modes of a track to use. This determines which
  *         scene, quad, and graph file to load.
  */
-void Track::loadTrackModel(bool reverse_track, unsigned int mode_id)
+void Track::loadTrackModels(bool reverse_track, unsigned int mode_id)
 {
     assert(m_current_track[PT_MAIN].load() == NULL);
 
@@ -2067,7 +2069,7 @@ void Track::loadTrackModel(bool reverse_track, unsigned int mode_id)
     main_loop->renderGUI(4700);
 
     unsigned int main_track_count = (unsigned int)m_all_nodes.size();
-
+        printf("m_all_nodes size is %lu\n", m_all_nodes.size());
     ModelDefinitionLoader model_def_loader(this);
     main_loop->renderGUI(4800);
 
@@ -2086,11 +2088,11 @@ void Track::loadTrackModel(bool reverse_track, unsigned int mode_id)
             }
         }
     }
-
     loadObjects(root, path, model_def_loader, true, NULL, NULL);
     main_loop->renderGUI(5000);
 
     Log::info("Track", "Overall scene complexity estimated at %d", irr_driver->getSceneComplexity());
+
     // Correct the parenting of meta library
     for (auto& p : m_meta_library)
     {
@@ -2103,7 +2105,6 @@ void Track::loadTrackModel(bool reverse_track, unsigned int mode_id)
         recursiveUpdatePosition(meta_ln->getNode());
         recursiveUpdatePhysics(p.second->getChildren());
         main_loop->renderGUI(5050);
-
     }
 
     model_def_loader.cleanLibraryNodesAfterLoad();
@@ -2329,7 +2330,7 @@ void Track::loadTrackModel(bool reverse_track, unsigned int mode_id)
         m_spherical_harmonics_textures.clear();
     }
 #endif   // !SERVER_ONLY
-}   // loadTrackModel
+}   // loadTrackModels
 
 //-----------------------------------------------------------------------------
 
@@ -2925,6 +2926,7 @@ void Track::uploadNodeVertexBuffer(scene::ISceneNode *node)
 //-----------------------------------------------------------------------------
 void Track::copyFromMainProcess()
 {
+    printf("COPY DONE \n");
     // Clear all unneeded objects copied in main process track
     m_physical_object_uid = 0;
     m_animated_textures.clear();

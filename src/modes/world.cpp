@@ -207,7 +207,7 @@ void World::init()
     // karts can be positioned properly on (and not in) the tracks.
     // This also defines the static Track::getCurrentTrack function.
     if (m_process_type == PT_MAIN)
-        track->loadTrackModel(RaceManager::get()->getReverseTrack());
+        track->loadTrackModels(RaceManager::get()->getReverseTrack());
     else
     {
         Track* child_track = Track::getCurrentTrack();

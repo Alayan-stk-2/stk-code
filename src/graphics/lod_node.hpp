@@ -107,6 +107,8 @@ public:
     void autoComputeLevel(float scale);
 
     void forceLevelOfDetail(int n);
+    // Used to increase the LOD distances in low complexity scenes
+    void increaseLODDistance(float multiplier);
 
     /** Get the highest level of detail node */
     scene::ISceneNode* getFirstNode()

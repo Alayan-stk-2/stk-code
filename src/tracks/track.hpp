@@ -482,7 +482,7 @@ public:
     void               handleExplosion(const Vec3 &pos,
                                        const PhysicalObject *mp,
                                        bool secondary_hits=true) const;
-    void               loadTrackModel  (bool reverse_track = false,
+    void               loadTrackModels (bool reverse_track = false,
                                         unsigned int mode_id=0);
     bool findGround(AbstractKart *kart);
 

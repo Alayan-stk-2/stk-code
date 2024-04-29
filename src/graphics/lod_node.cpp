@@ -125,7 +125,7 @@ void LODNode::OnAnimate(u32 timeMs)
             Box = m_nodes[m_detail.size() - 1]->getBoundingBox();
 
         // If this node has children other than the LOD nodes, animate it
-        for (unsigned i = 0; i < Children.size(); ++i)
+        for (unsigned int i = 0; i < Children.size(); ++i)
         {
             if (m_nodes_set.find(Children[i]) == m_nodes_set.end())
             {
@@ -136,8 +136,7 @@ void LODNode::OnAnimate(u32 timeMs)
                 }
             }
         }
-
-    }
+    } // if isVisible() && m_nodes.size() > 0
 }
 
 void LODNode::updateVisibility()
@@ -173,7 +172,7 @@ void LODNode::OnRegisterSceneNode()
         {
             m_nodes[level]->OnRegisterSceneNode();
         }
-        for (int i = 0; i < Children.size(); i++)
+        for (unsigned int i = 0; i < Children.size(); i++)
         {
             if (m_nodes_set.find(Children[i]) == m_nodes_set.end())
                 Children[i]->OnRegisterSceneNode();
@@ -187,7 +186,32 @@ void LODNode::OnRegisterSceneNode()
 * @param scale The model's scale*/
 void LODNode::autoComputeLevel(float scale)
 {
+    printf("Is this even called in OMC\n");
     m_area *= scale;
+
+    float multiplier = 1.0f;
+
+    // If the track is low complexity, increase distances for LoD nodes
+    if (irr_driver->getSceneComplexity() < 1500)
+    {
+        float ratio = 1.0f;
+        // Cap the potential effect
+        if (irr_driver->getSceneComplexity() < 100)
+            ratio = 15.0f;
+        else
+            ratio = 1500.0f / (float)(irr_driver->getSceneComplexity());
+
+        multiplier = 1.0f + 0.5f * sqrtf(ratio);
+        printf ("multiplier is %f\n", multiplier);/*
+        for (unsigned int i=0; i<m_all_nodes.size(); i++)
+        {
+            LODNode* ln = dynamic_cast<LODNode*>(m_all_nodes[i]);
+            if (ln != NULL)
+                ln->increaseLODDistance(multiplier);
+            else
+                printf("Cast failed %i\n", i);
+        } */
+    }
 
     // Amount of details based on user's input
     float agressivity = 1.0;
@@ -215,7 +239,7 @@ void LODNode::autoComputeLevel(float scale)
 
     // Then we recompute the level of detail culling distance
     int biais = m_detail.size();
-    for(unsigned i = 0; i < m_detail.size(); i++)
+    for(unsigned int i = 0; i < m_detail.size(); i++)
     {
         m_detail[i] = ((step / biais) * (i + 1));
         biais--;
@@ -229,6 +253,20 @@ void LODNode::autoComputeLevel(float scale)
         m_nodes[max_level]->getType() == scene::ESNT_LOD_NODE;
     Box = m_nodes[max_level]->getBoundingBox();
 }
+
+// Used to increase the LOD distances in low complexity scenes
+void LODNode::increaseLODDistance(float multiplier)
+{
+    if (multiplier < 1.0f)
+    return;
+
+    for(unsigned int i = 0; i < m_detail.size(); i++)
+    {
+        printf("m_detail de %i est %i, ", i, m_detail[i]);
+        m_detail[i] = int(float(m_detail[i]) * multiplier);
+        printf("après mult c'est %i\n", m_detail[i]);
+    }
+} // increaseLODDistance
 
 void LODNode::add(int level, scene::ISceneNode* node, bool reparent)
 {
