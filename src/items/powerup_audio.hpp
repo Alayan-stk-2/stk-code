@@ -19,6 +19,8 @@
 #ifndef HEADER_POWERUPAUDIO_HPP
 #define HEADER_POWERUPAUDIO_HPP
 
+#define POWERUP_SOUND_SOURCES 20
+
 #include "audio/sfx_base.hpp"
 #include "items/powerup_manager.hpp"
 
@@ -36,24 +38,26 @@ private:
     SFXBase *m_sudo_good;
     SFXBase *m_sudo_bad;
 
-    SFXBase      *m_powerup_sound;
+    SFXBase *m_powerup_sound[POWERUP_SOUND_SOURCES];
+    int m_curr_sound;
+    int m_counter_source[POWERUP_SOUND_SOURCES];
 
-    std::set<int>               m_played_sound_ticks; // Must be per kart
+    /** Used to avoid playing the same sound multiple times when rewinding*/
+    std::set<int> m_played_sound_ticks;
 
     PowerupAudio();
     void adjustSound(Kart* kart);
     void playGumSound(Kart* kart, int sound_type);
-    void resetSoundSource();
+    void playShootSound(Kart* kart);
+    void prepareSoundSource();
 public:
     static PowerupAudio* getInstance();
 
 	 ~PowerupAudio();
 
-    void onUseAudio(Kart* kart, PowerupManager::PowerupType type, PowerupManager::MiniState mini_state, int sound_type);
+    void onUseAudio(Kart* kart, PowerupManager::PowerupType type, int sound_type,
+        PowerupManager::MiniState mini_state = PowerupManager::NOT_MINI);
     void update(Kart* kart, int ticks);
-
-    void playSudoGoodSFX() { m_sudo_good->play(); }
-    void playSudoBadSFX()  { m_sudo_bad->play();  }
 };
 
 #endif
