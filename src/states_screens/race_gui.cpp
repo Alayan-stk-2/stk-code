@@ -376,8 +376,6 @@ void RaceGUI::renderPlayerView(const Camera *camera, float dt)
 
     bool isSpectatorCam = Camera::getActiveCamera()->isSpectatorMode();
 
-    if (!isSpectatorCam) drawPlungerInFace(camera, dt);
-
     if (viewport.getWidth() != (int)irr_driver->getActualScreenSize().Width ||
         viewport.getHeight() != (int)irr_driver->getActualScreenSize().Height)
     {
