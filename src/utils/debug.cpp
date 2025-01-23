@@ -560,20 +560,48 @@ bool handleContextMenuAction(s32 cmd_id)
         addPowerup(PowerupManager::POWERUP_PARACHUTE, 255);
         break;
     case DEBUG_POWERUP_PLUNGER:
-        addPowerup(PowerupManager::POWERUP_PLUNGER, 255);
+    {
+        float kappa = irr_driver->getSSAOK();
+        printf("Current kappa is %f", kappa);
+        kappa = kappa * 1.25f;
+        irr_driver->setSSAOK(kappa);
+        printf("New kappa is %f\n", kappa);
+        //addPowerup(PowerupManager::POWERUP_PLUNGER, 255);
         break;
+    }
     case DEBUG_POWERUP_RUBBERBALL:
         addPowerup(PowerupManager::POWERUP_RUBBERBALL, 255);
         break;
     case DEBUG_POWERUP_SWATTER:
-        addPowerup(PowerupManager::POWERUP_SWATTER, 255);
+    {
+        float kappa = irr_driver->getSSAOK();
+        printf("Current kappa is %f", kappa);
+        kappa = kappa / 1.25f;
+        irr_driver->setSSAOK(kappa);
+        printf("New kappa is %f\n", kappa);
+        //addPowerup(PowerupManager::POWERUP_SWATTER, 255);
         break;
+    }
     case DEBUG_POWERUP_SWITCH:
-        addPowerup(PowerupManager::POWERUP_SWITCH, 255);
+    {
+        float sigma = irr_driver->getSSAOSigma();
+        printf("Current sigma is %f", sigma);
+        sigma = sigma * 1.25f;
+        irr_driver->setSSAOSigma(sigma);
+        printf("New sigma is %f\n", sigma);
+        //addPowerup(PowerupManager::POWERUP_SWITCH, 255);
         break;
+    }
     case DEBUG_POWERUP_ZIPPER:
-        addPowerup(PowerupManager::POWERUP_ZIPPER, 255);
+    {
+        float sigma = irr_driver->getSSAOSigma();
+        printf("Current sigma is %f", sigma);
+        sigma = sigma / 1.25f;
+        irr_driver->setSSAOSigma(sigma);
+        printf("New sigma is %f\n", sigma);
+        //addPowerup(PowerupManager::POWERUP_ZIPPER, 255);
         break;
+    }
     case DEBUG_POWERUP_NITRO:
     {
         setNitro(100.0f);
