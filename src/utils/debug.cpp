@@ -557,8 +557,20 @@ bool handleContextMenuAction(s32 cmd_id)
         addPowerup(PowerupManager::POWERUP_CAKE, 255);
         break;
     case DEBUG_POWERUP_PARACHUTE:
-        addPowerup(PowerupManager::POWERUP_PARACHUTE, 255);
+    {
+        if (UserConfigParams::m_karts_powerup_gui )
+        {
+            UserConfigParams::m_karts_powerup_gui = false;
+            printf("SSAO switched off\n");
+        }
+        else
+        {
+            UserConfigParams::m_karts_powerup_gui = true;
+            printf("SSAO switched on\n");
+        }
+        //addPowerup(PowerupManager::POWERUP_PARACHUTE, 255);
         break;
+    }
     case DEBUG_POWERUP_PLUNGER:
     {
         float kappa = irr_driver->getSSAOK();

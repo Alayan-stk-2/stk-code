@@ -541,9 +541,12 @@ public:
         setTextureUnits(render_target_linear_depth);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        drawFullScreenEffect(irr_driver->getSSAORadius(),
-                             irr_driver->getSSAOK(),
-                             irr_driver->getSSAOSigma());
+        if (UserConfigParams::m_karts_powerup_gui)
+        {
+            drawFullScreenEffect(irr_driver->getSSAORadius(),
+                                 irr_driver->getSSAOK(),
+                                 irr_driver->getSSAOSigma());
+        }
 
     }   // render
 };   // SSAOShader
